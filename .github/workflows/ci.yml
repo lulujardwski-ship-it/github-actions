@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Procura segredos versionados
+        run: |
+          # [X] evita que a expressao encontre o proprio arquivo do workflow.
+          # -l mostra somente nomes de arquivos, sem expor valores nos logs.
+          set +e
+          git grep -IlE "GOCSP[X]-|client_secret[[:space:]]*=[[:space:]]*['\"][^'\"]+" -- . ':!*.md'
+          resultado=$?
+          set -e
+          if [ "$resultado" -eq 0 ]; then
+            echo "::error::Possivel segredo no repositorio; confira os arquivos listados sem publicar seu conteudo."
+            exit 1
+          fi
+          if [ "$resultado" -ne 1 ]; then
+            echo "::error::A busca de segredos nao foi concluida."
+            exit "$resultado"
+          fi
+      - name: Aplica as migracoes D1 em um SQLite local
+        run: |
+          if ! command -v sqlite3 >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y sqlite3
+          fi
+          shopt -s nullglob
+          arquivos=(migrations/*.sql)
+          if [ "${#arquivos[@]}" -eq 0 ]; then
+            echo "::error::Nenhuma migracao SQL encontrada."
+            exit 1
+          fi
+          for f in "${arquivos[@]}"; do
+            echo "Aplicando $f"
+            sqlite3 -bail teste.db < "$f"
+          done
+          sqlite3 teste.db ".tables"
+      - name: Valida HTML
+        run: npx --yes htmlhint "**/*.html"

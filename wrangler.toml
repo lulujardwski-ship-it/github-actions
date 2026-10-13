@@ -1,0 +1,10 @@
+name = "github-actions"
+compatibility_date = "2026-10-13"
+pages_build_output_dir = "./public"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "github-actions-db"
+# Configuracao pendente: substituir pelo UUID real do novo banco D1.
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
