@@ -11,10 +11,14 @@ Somente execucoes e resultados realmente observados serao marcados completos.
 ## Tarefa 1 - CI
 
 - Workflow: `.github/workflows/ci.yml`.
-- Execucao verde: pendente.
-- Execucao vermelha proposital: pendente.
-- Linha do erro SQL: pendente.
-- Correcao na mesma branch: pendente.
+- Execucao verde inicial (PR): https://github.com/lulujardwski-ship-it/github-actions/actions/runs/38481841456
+- Execucao vermelha proposital (PR): https://github.com/lulujardwski-ship-it/github-actions/actions/runs/38481906131
+- Linha do erro SQL: `Parse error near line 2: near "CREAT": syntax error`.
+- Arquivo de teste: `migrations/9999_teste_falha.sql`, contendo `CREAT TABLE teste_erro (id INTEGER);`.
+- Commit com erro: https://github.com/lulujardwski-ship-it/github-actions/commit/6c43e57bbfdc48d9eac6aa7b742192827d022729
+- Correcao na mesma branch (`avaliacao/configurar-actions`): arquivo de teste removido no commit https://github.com/lulujardwski-ship-it/github-actions/commit/9c2db17445df2641c7f9eba40f2dfdca01cbccfa.
+- Execucao verde depois da correcao (PR): https://github.com/lulujardwski-ship-it/github-actions/actions/runs/38482028216
+- PR do teste: https://github.com/lulujardwski-ship-it/github-actions/pull/1
 
 As migracoes sao testadas em SQLite porque o D1 usa seu mecanismo e suas
 semanticas SQL; isso permite detectar erros de sintaxe antes de alterar o
@@ -29,6 +33,7 @@ banco remoto, embora nao substitua toda a validacao especifica do D1.
 ## Tarefa 3 - Revisao por IA
 
 - Workflow: `.github/workflows/revisao-ia.yml`.
+- Configuracao do Copilot ainda pendente: a execucao https://github.com/lulujardwski-ship-it/github-actions/actions/runs/38481841220 falhou no passo de configuracao com `Cadastre COPILOT_PAT em Settings > Secrets and variables > Actions`. Isso nao e a evidencia do erro de permissao exigido pelo professor.
 - PR com SQL concatenado e comentario real da IA: pendente.
 - Correcao com `prepare(...).bind(...)` e nova revisao: pendente.
 - Run e log de erro ao retirar `pull-requests: write`: pendente.
