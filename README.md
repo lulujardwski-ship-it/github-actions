@@ -1,4 +1,46 @@
-# Laboratório de autenticação (Avaliação 2)
+# Avaliacao: GitHub Actions com IA
+
+Responsavel: Luiz Henrique Weinert Jardwski  
+RA: 2026107781
+
+Site copiado integralmente de `lulujardwski-ship-it/avaliacao2`, commit
+`529a59462aca7a8023ef06ad34a95ff1be0bd47a`. O codigo usa Cloudflare Pages
+Functions, Google OpenID Connect, GitHub OAuth, PKCE S256 e sessoes D1.
+
+## Automacao desta avaliacao
+
+| Arquivo | Funcao |
+| --- | --- |
+| `.github/workflows/ci.yml` | Em todo push e PR para main, procura segredos, aplica SQL em SQLite local e valida HTML. |
+| `.github/workflows/revisao-ia.yml` | Em PRs do proprio repositorio, solicita revisao ao Copilot e publica comentario. |
+| `.github/workflows/migrar.yml` | Em push na main que altere migrations/, aplica SQL no D1 remoto, consulta PRAGMA e tenta gerar resumo por IA. |
+| `migrations/0001_inicial.sql` | Esquema inicial: oauth_transactions, sessions e notas. |
+| `wrangler.toml` | Configuracao do Pages e binding DB; UUID do novo D1 ainda pendente. |
+| `AVALIACAO.md` | Evidencias reais e respostas para a entrega. |
+
+A protecao da main e uma regra nas configuracoes do GitHub. O enunciado
+descreve tres arquivos YAML, embora a introducao mencione quatro workflows.
+
+Seguir [docs/CONFIGURACAO.md](docs/CONFIGURACAO.md) para configurar o novo
+Pages, criar `github-actions-db`, preencher seu UUID e cadastrar os secrets.
+Nao publicar o novo Pages com o UUID zerado de exemplo.
+
+O site original e seu banco permanecem independentes desta copia. Os
+arquivos de `public/entrega1/` sao evidencias historicas da avaliacao anterior
+no dominio `avaliacao2-01z.pages.dev`; nao comprovam os testes desta avaliacao.
+`schema.sql` e uma referencia historica: use `migrations/` no novo banco.
+
+## Referencias
+
+- https://github.com/actions/ai-inference
+- https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions
+- https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks
+- https://developers.cloudflare.com/d1/reference/migrations/
+
+## Documentacao historica do projeto original (Avaliacao 2)
+
+As orientacoes abaixo foram preservadas como referencia da avaliacao anterior.
+Para esta avaliacao, prevalece docs/CONFIGURACAO.md, incluindo wrangler.toml.
 
 Projeto para Cloudflare Pages com Google OpenID Connect, GitHub OAuth, PKCE S256 e sessões D1. Não contém credenciais. O conteúdo em `public/` é acessível por URL; somente as rotas de API consultam a sessão.
 
@@ -12,7 +54,9 @@ Projeto para Cloudflare Pages com Google OpenID Connect, GitHub OAuth, PKCE S256
 6. No Pages, defina `PUBLIC_BASE_URL` (URL de produção sem barra final), `GOOGLE_CLIENT_ID` e `GITHUB_CLIENT_ID` como variáveis; `GOOGLE_CLIENT_SECRET` e `GITHUB_CLIENT_SECRET` como **segredos criptografados**. Reimplante.
 7. Teste ambos os logins e o logout na URL de produção, além dos seis casos de falha do PDF. Não inclua valores transitórios em logs ou evidências.
 
-Não crie `package.json`, `package-lock.json`, `node_modules` ou `wrangler.jsonc` neste projeto. Não coloque credenciais no repositório.
+Na avaliacao anterior, nao eram usados package.json ou Wrangler. Nesta
+avaliacao, os workflows usam Node/npm e o arquivo wrangler.toml. Nao coloque
+credenciais no repositorio.
 
 ## Evidências
 
